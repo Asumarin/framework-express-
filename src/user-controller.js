@@ -1,11 +1,38 @@
 const users = [
-  { id: 1, name: "kek" },
-  { id: 2, name: "cheburek" },
+  { id: 0, name: "kek" },
+  { id: 1, name: "cheburek" },
+  { id: 2, name: "cheburek321" },
 ];
 
 const getUsers = (req, res) => {
+  let { id } = req.params;
+  if (id) {
+    const indexOfUpdatingUser = users.findIndex(
+      (item) => item.id === Number(id)
+    );
+    if (indexOfUpdatingUser !== -1) {
+      res.send(users[indexOfUpdatingUser]);
+      res.end();
+    } else {
+      res.statusCode = 404;
+      res.write(`User with id: ${id} not found`);
+      res.end();
+    }
+  } else {
+    res.send(users);
+  }
+};
+
+const getUsersOld = (req, res) => {
   if (req.params.id) {
     return res.send(users.find((user) => user.id == req.params.id));
+  } else {
+    const indexOfUser = users.findIndex((item) => item.id);
+    if (indexOfUser == -1) {
+      res.statusCode = 404;
+      res.end();
+      res.write(`User with id: ${req.body.id} not found`);
+    }
   }
   res.send(users);
 };
