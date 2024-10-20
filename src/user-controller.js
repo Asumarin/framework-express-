@@ -23,25 +23,18 @@ const getUsers = (req, res) => {
   }
 };
 
-const getUsersOld = (req, res) => {
-  if (req.params.id) {
-    return res.send(users.find((user) => user.id == req.params.id));
-  } else {
-    const indexOfUser = users.findIndex((item) => item.id);
-    if (indexOfUser == -1) {
-      res.statusCode = 404;
-      res.end();
-      res.write(`User with id: ${req.body.id} not found`);
-    }
-  }
-  res.send(users);
-};
-
 const createUser = (req, res) => {
   console.log(req.body);
   const user = req.body;
-  users.push(user);
-  res.send(user);
+  if (!req.body) {
+    res.statusCode = 404;
+    res.write(`Request ${req.body} does not contain required fields`);
+    res.end();
+  } else {
+    res.statusCode = 201;
+    users.push(user);
+    res.send(user);
+  }
 };
 
 const updateUser = (req, res) => {
