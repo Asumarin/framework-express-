@@ -7,11 +7,9 @@ const users = [
 const getUsers = (req, res) => {
   let { id } = req.params;
   if (id) {
-    const indexOfUpdatingUser = users.findIndex(
-      (item) => item.id === Number(id)
-    );
-    if (indexOfUpdatingUser !== -1) {
-      res.send(users[indexOfUpdatingUser]);
+    const indexOfUser = users.findIndex((item) => item.id === Number(id));
+    if (indexOfUser !== -1) {
+      res.send(users[indexOfUser]);
       res.end();
     } else {
       res.statusCode = 404;
@@ -50,8 +48,30 @@ const updateUser = (req, res) => {
   }
 };
 
+const deleteUser = (req, res) => {
+  const { id } = req.params;
+  if (id) {
+    const indexOfUser = users.findIndex((item) => item.id === Number(id));
+    if (indexOfUser !== -1) {
+      users.splice(indexOfUser, 1);
+      res.statusCode = 204;
+      res.write(`User with id: ${id} deleted successfully`);
+      res.end();
+    } else {
+      res.statusCode = 404;
+      res.write(`User with id: ${id} not found`);
+      res.end();
+    }
+  } else {
+    res.statusCode = 400;
+    res.write("User ID is required");
+    res.end();
+  }
+};
+
 module.exports = {
   getUsers,
   createUser,
   updateUser,
+  deleteUser,
 };
